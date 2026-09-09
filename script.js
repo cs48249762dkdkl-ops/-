@@ -13,13 +13,19 @@ const message = document.getElementById("message");
 let currentRatio = "1:1";
      let textX = 50;
 let textY = 50;
+let imageScale = 1;
 
 const textXInput = document.getElementById("textX");
 const textYInput = document.getElementById("textY");
+const resetImageSize = document.getElementById("resetImageSize");
+
 function drawPreview() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (!currentImage) return;
-    ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
+  const width = currentImage.width * imageScale;
+const height = currentImage.height * imageScale;
+
+ctx.drawImage(currentImage, 0, 0, width, height);
     ctx.font = `${textSize.value}px sans-serif`;
     ctx.fillStyle = textColor.value;
     ctx.fillText(textInput.value, textX, textY);
@@ -90,3 +96,7 @@ textYInput.addEventListener("input", function () {
     textY = Number(textYInput.value);
     drawPreview(); 
 });                            
+resetImageSize.addEventListener("click", function () {
+    imageScale = 1;
+    drawPreview();
+});
