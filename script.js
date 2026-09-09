@@ -49,7 +49,7 @@ function resetImageSizeToFit() {
 }
 
 
-// 미리보기 그리기
+// 미리보기
 function drawPreview() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
