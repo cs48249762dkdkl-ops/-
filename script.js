@@ -1,3 +1,4 @@
+const resetImageSize = document.getElementById("resetImageSize");
 const imageInput = document.getElementById("imageInput");
 const canvas = document.getElementById("previewCanvas");
 const ctx = canvas.getContext("2d");
@@ -142,4 +143,7 @@ downloadButton.addEventListener("click", function () {
     link.click();
 
     message.textContent = "이미지가 저장되었습니다.";
+});
+resetImageSize.addEventListener("click", function () {
+    drawPreview();
 });
