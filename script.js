@@ -11,13 +11,15 @@ const ratio9to16 = document.getElementById("ratio9to16");
 const downloadButton = document.getElementById("downloadButton");
 const message = document.getElementById("message");
 let currentRatio = "1:1";
+     let textX = 50;
+let textY = 50;
 function drawPreview() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (!currentImage) return;
     ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
     ctx.font = `${textSize.value}px sans-serif`;
     ctx.fillStyle = textColor.value;
-    ctx.fillText(textInput.value, 50, 50);
+    ctx.fillText(textInput.value, textX, textY);
 }
 imageInput.addEventListener("change", function () {
     const file = imageInput.files[0];
