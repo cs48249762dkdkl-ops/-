@@ -13,6 +13,9 @@ const message = document.getElementById("message");
 let currentRatio = "1:1";
      let textX = 50;
 let textY = 50;
+
+const textXInput = document.getElementById("textX");
+const textYInput = document.getElementById("textY");
 function drawPreview() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (!currentImage) return;
@@ -78,3 +81,12 @@ downloadButton.addEventListener("click", function () {
 
     message.textContent = "이미지가 저장되었습니다.";
 });
+textXInput.addEventListener("input", function () {
+    textX = Number(textXInput.value);
+    drawPreview();
+});
+
+textYInput.addEventListener("input", function () {
+    textY = Number(textYInput.value);
+    drawPreview(); 
+});                            
