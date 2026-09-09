@@ -1,48 +1,67 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>짤·카드 스튜디오</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>짤·카드 스튜디오</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<h1>짤·카드 스튜디오</h1>
-<input type="file" id="imageInput" accept="image/png, image/jpeg">
-<br>
- <label>
-    사진 크기
-    <input type="range" id="imageScale" min="10" max="200" value="100">
-</label>
-<br>
-<canvas id="previewCanvas"></canvas>
-<br>
-<label for="textInput">문구:</label>
-<input type="text" id="textInput" placeholder="문구를 입력하세요">
-<br>
- <label>
-    글자 X 위치
-    <input type="range" id="textX" min="0" max="500" value="50">
-</label>
-<br>
 
-<label>
-    글자 Y 위치
-    <input type="range" id="textY" min="0" max="800" value="50">
-</label>
-<br> 
-<label for="textSize">크기:</label>
-<input type="range" id="textSize" min="10" max="200" value="40">
-<br>
-<label for="textColor">색상:</label>
-<input type="color" id="textColor" value="#000000">
-<br>
-<label for="aspectRatio">비율:</label>
-<button type="button" id="ratio1to1">1:1</button>
-<button type="button" id="ratio4to5">4:5</button>
-<button type="button" id="ratio9to16">9:16</button>
-<br>
-<button type="button" id="downloadButton">이미지 다운로드</button>
-<div id="message"></div>
-<script src="script.js"></script>
+<body>
+
+    <h1>짤·카드 스튜디오</h1>
+
+    <!-- 사진 선택 -->
+    <input type="file" id="imageInput" accept="image/png, image/jpeg">
+    <br>
+
+    <!-- 사진 크기 -->
+    <label>
+        사진 크기
+        <input type="range" id="imageScale" min="10" max="200" value="100">
+    </label>
+    <br>
+
+    <!-- 미리보기 -->
+    <canvas id="previewCanvas"></canvas>
+    <br>
+
+    <!-- 문구 -->
+    <label for="textInput">문구:</label>
+    <input type="text" id="textInput" placeholder="문구를 입력하세요">
+    <br>
+
+    <!-- 글자 X 위치 -->
+    <label>
+        글자 X 위치
+        <input type="range" id="textX" min="0" max="500" value="50">
+    </label>
+    <br>
+
+    <!-- 글자 Y 위치 -->
+    <label>
+        글자 Y 위치
+        <input type="range" id="textY" min="0" max="800" value="50">
+    </label>
+    <br>
+
+    <!-- 글자 크기 -->
+    <label for="textSize">크기:</label>
+    <input type="range" id="textSize" min="10" max="200" value="40">
+    <br>
+
+    <!-- 글자 색상 -->
+    <label for="textColor">색상:</label>
+    <input type="color" id="textColor" value="#000000">
+    <br>
+
+    <!-- 다운로드 -->
+    <button type="button" id="downloadButton">
+        이미지 다운로드
+    </button>
+
+    <div id="message"></div>
+
+    <script src="script.js"></script>
+
 </body>
 </html>
