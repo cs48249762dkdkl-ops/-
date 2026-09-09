@@ -18,7 +18,7 @@ let imageScale = 1;
 const textXInput = document.getElementById("textX");
 const textYInput = document.getElementById("textY");
 const resetImageSize = document.getElementById("resetImageSize");
-
+const imageScaleInput = document.getElementById("imageScale");
 function drawPreview() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (!currentImage) return;
@@ -85,18 +85,21 @@ downloadButton.addEventListener("click", function () {
     link.href = canvas.toDataURL("image/png");
     link.click();
 
-    message.textContent = "이미지가 저장되었습니다.";
+message.textContent = "이미지가 저장되었습니다.";
 });
+
 textXInput.addEventListener("input", function () {
     textX = Number(textXInput.value);
     drawPreview();
 });
 
-textYInput.addEventListener("input", function () {
-    textY = Number(textYInput.value);
-    drawPreview(); 
-});                            
+imageScaleInput.addEventListener("input", function () {
+    imageScale = Number(imageScaleInput.value) / 100;
+    drawPreview();
+});
+
 resetImageSize.addEventListener("click", function () {
     imageScale = 1;
+    imageScaleInput.value = 100;
     drawPreview();
 });
