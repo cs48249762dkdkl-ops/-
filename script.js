@@ -129,6 +129,12 @@ textYInput.addEventListener("input", function () {
 });
 
 
+// 사진 크기 초기화
+resetImageSize.addEventListener("click", function () {
+    drawPreview();
+});
+
+
 // 이미지 다운로드
 downloadButton.addEventListener("click", function () {
     if (!currentImage) {
@@ -143,7 +149,4 @@ downloadButton.addEventListener("click", function () {
     link.click();
 
     message.textContent = "이미지가 저장되었습니다.";
-});
-resetImageSize.addEventListener("click", function () {
-    drawPreview();
 });
