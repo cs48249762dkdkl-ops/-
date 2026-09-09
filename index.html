@@ -1,251 +1,37 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>사진 편집기</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
-
-        canvas {
-            max-width: 100%;
-            border: 1px solid #ccc;
-            margin-top: 20px;
-        }
-
-        .controls {
-            margin-top: 20px;
-        }
-
-        input,
-        button {
-            margin: 5px;
-            padding: 8px;
-        }
-    </style>
-</head>
-
-<body>
-
-    <h1>📷 사진 편집기</h1>
-
-    <!-- 사진 선택 -->
-    <input type="file" id="imageInput" accept="image/*">
-
-    <div class="controls">
-
-        <!-- 글자 입력 -->
-        <input
-            type="text"
-            id="textInput"
-            placeholder="사진에 넣을 글자"
-        >
-
-        <!-- 글자 색상 -->
-        <input
-            type="color"
-            id="textColor"
-            value="#ffffff"
-        >
-
-        <br>
-
-        <!-- 글자 위치 -->
-        <button id="moveLeft">←</button>
-        <button id="moveRight">→</button>
-        <button id="moveUp">↑</button>
-        <button id="moveDown">↓</button>
-
-        <br>
-
-        <!-- 저장 -->
-        <button id="saveButton">
-            💾 사진 저장
-        </button>
-
-    </div>
-
-    <canvas id="previewCanvas"></canvas>
-
-    <script>
-
-        const imageInput = document.getElementById("imageInput");
-        const canvas = document.getElementById("previewCanvas");
-        const ctx = canvas.getContext("2d");
-
-        const textInput = document.getElementById("textInput");
-        const textColor = document.getElementById("textColor");
-
-        const moveLeft = document.getElementById("moveLeft");
-        const moveRight = document.getElementById("moveRight");
-        const moveUp = document.getElementById("moveUp");
-        const moveDown = document.getElementById("moveDown");
-
-        const saveButton = document.getElementById("saveButton");
-
-        let currentImage = null;
-
-        // 글자 위치
-        let textX = 100;
-        let textY = 100;
-
-        // 글자 크기는 고정
-        const textSize = 40;
-
-
-        // =========================
-        // 사진 불러오기
-        // =========================
-
-        imageInput.addEventListener("change", function(event) {
-
-            const file = event.target.files[0];
-
-            if (!file) {
-                return;
-            }
-
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-
-                const image = new Image();
-
-                image.onload = function() {
-
-                    currentImage = image;
-
-                    canvas.width = image.width;
-                    canvas.height = image.height;
-
-                    // 처음 글자 위치
-                    textX = canvas.width / 2;
-                    textY = canvas.height / 2;
-
-                    drawCanvas();
-                };
-
-                image.src = e.target.result;
-            };
-
-            reader.readAsDataURL(file);
-        });
-
-
-        // =========================
-        // 화면 그리기
-        // =========================
-
-        function drawCanvas() {
-
-            if (!currentImage) {
-                return;
-            }
-
-            // 사진 그리기
-            ctx.drawImage(
-                currentImage,
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
-
-
-            // 글자 설정
-            ctx.font = `${textSize}px Arial`;
-            ctx.fillStyle = textColor.value;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-
-            // 글자 그리기
-            ctx.fillText(
-                textInput.value,
-                textX,
-                textY
-            );
-        }
-
-
-        // =========================
-        // 글자 입력
-        // =========================
-
-        textInput.addEventListener("input", drawCanvas);
-
-
-        // =========================
-        // 글자 색상 변경
-        // =========================
-
-        textColor.addEventListener("input", drawCanvas);
-
-
-        // =========================
-        // 글자 위치 이동
-        // =========================
-
-        moveLeft.addEventListener("click", function() {
-
-            textX -= 10;
-
-            drawCanvas();
-        });
-
-
-        moveRight.addEventListener("click", function() {
-
-            textX += 10;
-
-            drawCanvas();
-        });
-
-
-        moveUp.addEventListener("click", function() {
-
-            textY -= 10;
-
-            drawCanvas();
-        });
-
-
-        moveDown.addEventListener("click", function() {
-
-            textY += 10;
-
-            drawCanvas();
-        });
-
-
-        // =========================
-        // 사진 저장
-        // =========================
-
-        saveButton.addEventListener("click", function() {
-
-            if (!currentImage) {
-
-                alert("먼저 사진을 선택해주세요.");
-
-                return;
-            }
-
-            const link = document.createElement("a");
-
-            link.download = "edited-photo.png";
-
-            link.href = canvas.toDataURL("image/png");
-
-            link.click();
-        });
-
-    </script>
-
-</body>
-</html>
+<input type="file" id="imageInput" accept="image/png, image/jpeg">
+<br>
+
+<canvas id="previewCanvas"></canvas>
+<br>
+
+<label for="textInput">문구:</label>
+<input type="text" id="textInput" placeholder="문구를 입력하세요">
+<br>
+
+<label>
+    글자 X 위치
+    <input type="range" id="textX" min="0" max="500" value="50">
+</label>
+<br>
+
+<label>
+    글자 Y 위치
+    <input type="range" id="textY" min="0" max="800" value="50">
+</label>
+<br>
+
+<label for="textSize">크기:</label>
+<input type="range" id="textSize" min="10" max="200" value="40">
+<br>
+
+<label for="textColor">색상:</label>
+<input type="color" id="textColor" value="#000000">
+<br>
+
+<button type="button" id="downloadButton">
+    이미지 다운로드
+</button>
+
+<div id="message"></div>
+
+<script src="script.js"></script>
