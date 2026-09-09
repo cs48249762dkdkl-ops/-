@@ -1,66 +1,87 @@
-const imageScaleInput = document.getElementById("imageScale");
+<script>
 const imageInput = document.getElementById("imageInput");
 const canvas = document.getElementById("previewCanvas");
 const ctx = canvas.getContext("2d");
 
-let currentImage = null;
-
 const textInput = document.getElementById("textInput");
-const textSize = document.getElementById("textSize");
 const textColor = document.getElementById("textColor");
 
-const downloadButton = document.getElementById("downloadButton");
-const message = document.getElementById("message");
+const moveLeft = document.getElementById("moveLeft");
+const moveRight = document.getElementById("moveRight");
+const moveUp = document.getElementById("moveUp");
+const moveDown = document.getElementById("moveDown");
 
-let textX = 50;
-let textY = 50;
+const saveButton = document.getElementById("saveButton");
+
+let currentImage = null;
+
+let textX = 0;
+let textY = 0;
+
+const textSize = 40;
 
 
-// 사진 위치와 크기
-let imageX = 0;
-let imageY = 0;
-let imageWidth = 0;
-let imageHeight = 0;
+// 사진 불러오기
+imageInput.addEventListener("change", function(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        const image = new Image();
+
+        image.onload = function() {
+
+            currentImage = image;
+
+            // 사진 원본 크기 그대로 사용
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            textX = canvas.width / 2;
+            textY = canvas.height / 2;
+
+            drawCanvas();
+        };
+
+        image.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+});
 
 
-// 사진 크기 자동 설정
-function setImageSize() {
+// 캔버스 그리기
+function drawCanvas() {
+
     if (!currentImage) return;
 
-    const scaleX = canvas.width / currentImage.width;
-    const scaleY = canvas.height / currentImage.height;
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
-    const fitScale = Math.min(scaleX, scaleY);
-
-    const userScale = Number(imageScaleInput.value) / 100;
-
-    imageWidth = currentImage.width * fitScale * userScale;
-    imageHeight = currentImage.height * fitScale * userScale;
-
-    imageX = (canvas.width - imageWidth) / 2;
-    imageY = (canvas.height - imageHeight) / 2;
-}
-
-
-// 미리보기
-function drawPreview() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    if (!currentImage) return;
-
-    setImageSize();
-
+    // 사진 원본 크기로 표시
     ctx.drawImage(
         currentImage,
-        imageX,
-        imageY,
-        imageWidth,
-        imageHeight
+        0,
+        0,
+        canvas.width,
+        canvas.height
     );
 
     // 글자
-    ctx.font = `${textSize.value}px sans-serif`;
+    ctx.font = `${textSize}px Arial`;
     ctx.fillStyle = textColor.value;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
     ctx.fillText(
         textInput.value,
         textX,
@@ -69,83 +90,56 @@ function drawPreview() {
 }
 
 
-// 사진 선택
-imageInput.addEventListener("change", function () {
-    const file = imageInput.files[0];
-
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-        currentImage = new Image();
-
-        currentImage.onload = function () {
-            drawPreview();
-        };
-
-        currentImage.src = e.target.result;
-    };
-
-    reader.readAsDataURL(file);
-});
-
-
-// 사진 크기 조절
-imageScaleInput.addEventListener("input", function () {
-    drawPreview();
-});
-
-
-// 문구
-textInput.addEventListener("input", function () {
-    drawPreview();
-});
-
-
-// 글자 크기
-textSize.addEventListener("input", function () {
-    drawPreview();
-});
+// 글자 입력
+textInput.addEventListener("input", drawCanvas);
 
 
 // 글자 색상
-textColor.addEventListener("input", function () {
-    drawPreview();
+textColor.addEventListener("input", drawCanvas);
+
+
+// 왼쪽
+moveLeft.addEventListener("click", function() {
+    textX -= 10;
+    drawCanvas();
 });
 
 
-// 글자 X 위치
-const textXInput = document.getElementById("textX");
-
-textXInput.addEventListener("input", function () {
-    textX = Number(textXInput.value);
-    drawPreview();
+// 오른쪽
+moveRight.addEventListener("click", function() {
+    textX += 10;
+    drawCanvas();
 });
 
 
-// 글자 Y 위치
-const textYInput = document.getElementById("textY");
-
-textYInput.addEventListener("input", function () {
-    textY = Number(textYInput.value);
-    drawPreview();
+// 위
+moveUp.addEventListener("click", function() {
+    textY -= 10;
+    drawCanvas();
 });
 
 
-// 이미지 다운로드
-downloadButton.addEventListener("click", function () {
+// 아래
+moveDown.addEventListener("click", function() {
+    textY += 10;
+    drawCanvas();
+});
+
+
+// 사진 저장
+saveButton.addEventListener("click", function() {
+
     if (!currentImage) {
-        message.textContent = "먼저 이미지를 선택해주세요.";
+        alert("먼저 사진을 선택해주세요.");
         return;
     }
 
     const link = document.createElement("a");
 
-    link.download = "edited-image.png";
+    link.download = "edited-photo.png";
+
     link.href = canvas.toDataURL("image/png");
 
     link.click();
-
-    message.textContent = "이미지가 저장되었습니다.";
 });
+</script>
