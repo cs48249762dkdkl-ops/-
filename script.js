@@ -11,27 +11,35 @@ const textColor = document.getElementById("textColor");
 const downloadButton = document.getElementById("downloadButton");
 const message = document.getElementById("message");
 
+const textXInput = document.getElementById("textX");
+const textYInput = document.getElementById("textY");
+
 let textX = 50;
 let textY = 50;
 
-const textXInput = document.getElementById("textX");
-const textYInput = document.getElementById("textY");
+
+// 캔버스 크기
+canvas.width = 500;
+canvas.height = 500;
 
 
 // 미리보기
 function drawPreview() {
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (!currentImage) return;
+    if (!currentImage) {
+        return;
+    }
 
-    // 사진을 캔버스 안에 맞춤
+    // 사진 비율을 유지하면서 캔버스 안에 맞춤
     const scaleX = canvas.width / currentImage.width;
     const scaleY = canvas.height / currentImage.height;
 
-    const fitScale = Math.min(scaleX, scaleY);
+    const scale = Math.min(scaleX, scaleY);
 
-    const width = currentImage.width * fitScale;
-    const height = currentImage.height * fitScale;
+    const width = currentImage.width * scale;
+    const height = currentImage.height * scale;
 
     const x = (canvas.width - width) / 2;
     const y = (canvas.height - height) / 2;
@@ -44,7 +52,7 @@ function drawPreview() {
         height
     );
 
-    // 문구
+    // 글자
     ctx.font = `${textSize.value}px sans-serif`;
     ctx.fillStyle = textColor.value;
 
@@ -61,7 +69,9 @@ imageInput.addEventListener("change", function () {
 
     const file = imageInput.files[0];
 
-    if (!file) return;
+    if (!file) {
+        return;
+    }
 
     const reader = new FileReader();
 
@@ -116,7 +126,7 @@ textYInput.addEventListener("input", function () {
 });
 
 
-// 이미지 다운로드
+// 다운로드
 downloadButton.addEventListener("click", function () {
 
     if (!currentImage) {
@@ -130,9 +140,7 @@ downloadButton.addEventListener("click", function () {
     const link = document.createElement("a");
 
     link.download = "edited-image.png";
-
-    link.href =
-        canvas.toDataURL("image/png");
+    link.href = canvas.toDataURL("image/png");
 
     link.click();
 
