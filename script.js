@@ -21,12 +21,16 @@ const resetImageSize = document.getElementById("resetImageSize");
 const imageScaleInput = document.getElementById("imageScale");
 function drawPreview() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+     
     if (!currentImage) return;
-  const scaleX = canvas.width / currentImage.width;
+     
+const scaleX = canvas.width / currentImage.width;
 const scaleY = canvas.height / currentImage.height;
 
-const fitScale = Math.min(scaleX, scaleY) * imageScale;
+   
+const fitScale = Math.min(scaleX, scaleY)
 
+     
 const width = currentImage.width * fitScale;
 const height = currentImage.height * fitScale;
 
@@ -34,6 +38,7 @@ const x = (canvas.width - width) / 2;
 const y = (canvas.height - height) / 2;
 
 ctx.drawImage(currentImage, x, y, width, height);
+
     ctx.font = `${textSize.value}px sans-serif`;
     ctx.fillStyle = textColor.value;
     ctx.fillText(textInput.value, textX, textY);
