@@ -20,13 +20,18 @@ let currentRatio = "1:1";
 let textX = 50;
 let textY = 50;
 
+// 사진 위치와 크기
+let imageX = 0;
+let imageY = 0;
+let imageWidth = 0;
+let imageHeight = 0;
+
 const textXInput = document.getElementById("textX");
 const textYInput = document.getElementById("textY");
 
 
-function drawPreview() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+// 사진 크기 초기화
+function resetImageSizeToFit() {
     if (!currentImage) return;
 
     const scaleX = canvas.width / currentImage.width;
@@ -34,13 +39,29 @@ function drawPreview() {
 
     const fitScale = Math.min(scaleX, scaleY);
 
-    const width = currentImage.width * fitScale;
-    const height = currentImage.height * fitScale;
+    imageWidth = currentImage.width * fitScale;
+    imageHeight = currentImage.height * fitScale;
 
-    const x = (canvas.width - width) / 2;
-    const y = (canvas.height - height) / 2;
+    imageX = (canvas.width - imageWidth) / 2;
+    imageY = (canvas.height - imageHeight) / 2;
 
-    ctx.drawImage(currentImage, x, y, width, height);
+    drawPreview();
+}
+
+
+// 미리보기 그리기
+function drawPreview() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!currentImage) return;
+
+    ctx.drawImage(
+        currentImage,
+        imageX,
+        imageY,
+        imageWidth,
+        imageHeight
+    );
 
     ctx.font = `${textSize.value}px sans-serif`;
     ctx.fillStyle = textColor.value;
@@ -60,7 +81,7 @@ imageInput.addEventListener("change", function () {
         currentImage = new Image();
 
         currentImage.onload = function () {
-            drawPreview();
+            resetImageSizeToFit();
         };
 
         currentImage.src = e.target.result;
@@ -73,27 +94,33 @@ imageInput.addEventListener("change", function () {
 // 1:1
 ratio1to1.addEventListener("click", function () {
     currentRatio = "1:1";
+
     canvas.width = 500;
     canvas.height = 500;
-    drawPreview();
+
+    resetImageSizeToFit();
 });
 
 
 // 4:5
 ratio4to5.addEventListener("click", function () {
     currentRatio = "4:5";
+
     canvas.width = 400;
     canvas.height = 500;
-    drawPreview();
+
+    resetImageSizeToFit();
 });
 
 
 // 9:16
 ratio9to16.addEventListener("click", function () {
     currentRatio = "9:16";
+
     canvas.width = 450;
     canvas.height = 800;
-    drawPreview();
+
+    resetImageSizeToFit();
 });
 
 
@@ -129,9 +156,9 @@ textYInput.addEventListener("input", function () {
 });
 
 
-// 사진 크기 초기화
+// 사진 크기 초기화 버튼
 resetImageSize.addEventListener("click", function () {
-    drawPreview();
+    resetImageSizeToFit();
 });
 
 
