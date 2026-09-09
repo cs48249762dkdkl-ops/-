@@ -1,4 +1,4 @@
-const resetImageSize = document.getElementById("resetImageSize");
+const imageScaleInput = document.getElementById("imageScale");
 const imageInput = document.getElementById("imageInput");
 const canvas = document.getElementById("previewCanvas");
 const ctx = canvas.getContext("2d");
@@ -9,16 +9,12 @@ const textInput = document.getElementById("textInput");
 const textSize = document.getElementById("textSize");
 const textColor = document.getElementById("textColor");
 
-const ratio1to1 = document.getElementById("ratio1to1");
-const ratio4to5 = document.getElementById("ratio4to5");
-const ratio9to16 = document.getElementById("ratio9to16");
-
 const downloadButton = document.getElementById("downloadButton");
 const message = document.getElementById("message");
 
-let currentRatio = "1:1";
 let textX = 50;
 let textY = 50;
+
 
 // 사진 위치와 크기
 let imageX = 0;
@@ -26,12 +22,9 @@ let imageY = 0;
 let imageWidth = 0;
 let imageHeight = 0;
 
-const textXInput = document.getElementById("textX");
-const textYInput = document.getElementById("textY");
 
-
-// 사진 크기 초기화
-function resetImageSizeToFit() {
+// 사진 크기 자동 설정
+function setImageSize() {
     if (!currentImage) return;
 
     const scaleX = canvas.width / currentImage.width;
@@ -39,13 +32,13 @@ function resetImageSizeToFit() {
 
     const fitScale = Math.min(scaleX, scaleY);
 
-    imageWidth = currentImage.width * fitScale;
-    imageHeight = currentImage.height * fitScale;
+    const userScale = Number(imageScaleInput.value) / 100;
+
+    imageWidth = currentImage.width * fitScale * userScale;
+    imageHeight = currentImage.height * fitScale * userScale;
 
     imageX = (canvas.width - imageWidth) / 2;
     imageY = (canvas.height - imageHeight) / 2;
-
-    drawPreview();
 }
 
 
@@ -55,6 +48,8 @@ function drawPreview() {
 
     if (!currentImage) return;
 
+    setImageSize();
+
     ctx.drawImage(
         currentImage,
         imageX,
@@ -63,9 +58,14 @@ function drawPreview() {
         imageHeight
     );
 
+    // 글자
     ctx.font = `${textSize.value}px sans-serif`;
     ctx.fillStyle = textColor.value;
-    ctx.fillText(textInput.value, textX, textY);
+    ctx.fillText(
+        textInput.value,
+        textX,
+        textY
+    );
 }
 
 
@@ -81,7 +81,7 @@ imageInput.addEventListener("change", function () {
         currentImage = new Image();
 
         currentImage.onload = function () {
-            resetImageSizeToFit();
+            drawPreview();
         };
 
         currentImage.src = e.target.result;
@@ -91,36 +91,9 @@ imageInput.addEventListener("change", function () {
 });
 
 
-// 1:1
-ratio1to1.addEventListener("click", function () {
-    currentRatio = "1:1";
-
-    canvas.width = 500;
-    canvas.height = 500;
-
-    resetImageSizeToFit();
-});
-
-
-// 4:5
-ratio4to5.addEventListener("click", function () {
-    currentRatio = "4:5";
-
-    canvas.width = 400;
-    canvas.height = 500;
-
-    resetImageSizeToFit();
-});
-
-
-// 9:16
-ratio9to16.addEventListener("click", function () {
-    currentRatio = "9:16";
-
-    canvas.width = 450;
-    canvas.height = 800;
-
-    resetImageSizeToFit();
+// 사진 크기 조절
+imageScaleInput.addEventListener("input", function () {
+    drawPreview();
 });
 
 
@@ -143,6 +116,8 @@ textColor.addEventListener("input", function () {
 
 
 // 글자 X 위치
+const textXInput = document.getElementById("textX");
+
 textXInput.addEventListener("input", function () {
     textX = Number(textXInput.value);
     drawPreview();
@@ -150,15 +125,11 @@ textXInput.addEventListener("input", function () {
 
 
 // 글자 Y 위치
+const textYInput = document.getElementById("textY");
+
 textYInput.addEventListener("input", function () {
     textY = Number(textYInput.value);
     drawPreview();
-});
-
-
-// 사진 크기 초기화 버튼
-resetImageSize.addEventListener("click", function () {
-    resetImageSizeToFit();
 });
 
 
@@ -173,6 +144,7 @@ downloadButton.addEventListener("click", function () {
 
     link.download = "edited-image.png";
     link.href = canvas.toDataURL("image/png");
+
     link.click();
 
     message.textContent = "이미지가 저장되었습니다.";
